@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TVShowAPI } from "./api/tv-show";
 import logoImg from "./assets/images/logo.png";
 import { Logo } from "./components/Logo/Logo";
+import { SearchBar } from "./components/SearchBar/SearchBar";
 import { TVShowDetail } from "./components/TVShowDetail/TVShowDetail";
 import { TVShowList } from "./components/TVShowList/TVShowList";
 import { BACKDROP_BASE_URL } from "./config";
@@ -22,6 +23,13 @@ export function App() {
     const recommendationsListResp = await TVShowAPI.fetchRecommendations(tvShowId);
     if (recommendationsListResp.length > 0) {
       setRecomendationsList(recommendationsListResp.slice(0, 10));
+    }
+  }
+
+  async function fetchByTitle(title) {
+    const searchResponse = await TVShowAPI.fetchByTitle(title);
+    if (searchResponse.length > 0) {
+      setCurrentTVShow(searchResponse[0])
     }
   }
 
@@ -53,7 +61,7 @@ export function App() {
             <Logo img={logoImg} title="Whatowatch" subtitle="Find a show you may like" />
           </div>
           <div className="col-md-12 col-lg-4">
-            <input style={{ width: "100%" }} type="text" />
+            <SearchBar onSubmit={fetchByTitle} />
           </div>
         </div>
       </div>
