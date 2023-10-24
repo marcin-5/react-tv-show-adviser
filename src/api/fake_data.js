@@ -8,7 +8,7 @@ export const FAKE_POPULARS = [
     origin_country: ["BR"],
     original_language: "pt",
     original_name: "Elas por Elas",
-    overview: "",
+    overview: "Some overview, some overview, some overview, some overview, some overview, some overview",
     popularity: 1868.924,
     poster_path: "/hCSH5KvSqShWXhFiXr88wtJXwlO.jpg",
     vote_average: 9.5,
