@@ -10,8 +10,8 @@ export function FiveStarRating({ rating }) {
         <StarFill key={"star-fill" + i} />
       ))}
       {hasHalfStar ? <StarHalf key="star-half" /> : ""}
-      {Array.from({ length: starEmptyCount }, () => (
-        <StarEmpty key={"q"} />
+      {Array.from({ length: starEmptyCount }, (_, i) => (
+        <StarEmpty key={"star-empty" + i} />
       ))}
     </div>
   );
