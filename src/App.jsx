@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { TVShowAPI } from "./api/tv-show";
+import logoImg from "./assets/images/logo.png";
+import { Logo } from "./components/Logo/Logo";
 import { TVShowDetail } from "./components/TVShowDetail/TVShowDetail";
 import { BACKDROP_BASE_URL } from "./config";
 import s from "./style.module.css";
@@ -31,8 +33,7 @@ export function App() {
       <div className={s.header}>
         <div className="row">
           <div className="col-4">
-            <div>Logo here</div>
-            <div>subtitle</div>
+            <Logo img={logoImg} title="Whatowatch" subtitle="Find a show you may like" />
           </div>
           <div className="col-md-12 col-lg-4">
             <input style={{ width: "100%" }} type="text" />
