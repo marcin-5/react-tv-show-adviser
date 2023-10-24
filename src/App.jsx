@@ -3,6 +3,7 @@ import { TVShowAPI } from "./api/tv-show";
 import logoImg from "./assets/images/logo.png";
 import { Logo } from "./components/Logo/Logo";
 import { TVShowDetail } from "./components/TVShowDetail/TVShowDetail";
+import { TVShowListItem } from "./components/TVShowListItem/TVShowListItem";
 import { BACKDROP_BASE_URL } from "./config";
 import s from "./style.module.css";
 
@@ -43,7 +44,16 @@ export function App() {
       <div className={s.tv_show_details}>
         {currentTVShow && <TVShowDetail tvShow={currentTVShow} />}
       </div>
-      <div className={s.recommended_shows}>Recommended tv shows</div>
+      <div className={s.recommended_shows}>
+        {currentTVShow && (
+          <TVShowListItem
+            tvShow={currentTVShow}
+            onClick={(tvShow) => {
+              console.log("I have been clicked", tvShow);
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
