@@ -9,6 +9,7 @@ import s from "./style.module.css";
 
 export function App() {
   const [currentTVShow, setCurrentTVShow] = useState();
+  const [recommendationsList, setRecomendationsList] = useState([]);
 
   async function fetchPopulars() {
     const popularTVShowList = await TVShowAPI.fetchPopulars();
@@ -17,10 +18,22 @@ export function App() {
     }
   }
 
+  async function fetchRecommendations(tvShowId) {
+    const recommendationsListResp = await TVShowAPI.fetchRecommendations(tvShowId);
+    if (recommendationsListResp.length > 0) {
+      setRecomendationsList(recommendationsListResp.slice(0, 10));
+    }
+  }
+
   useEffect(() => {
     fetchPopulars();
   }, []);
 
+  useEffect(() => {
+    if (currentTVShow) fetchRecommendations(currentTVShow.id);
+  }, [currentTVShow]);
+
+  console.log(recommendationsList);
   return (
     <div
       className={s.main_container}
