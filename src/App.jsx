@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TVShowAPI } from './api/tv-show';
 import logoImg from './assets/images/logo.png';
 import { Logo } from './components/Logo/Logo';
@@ -11,6 +11,17 @@ import s from './style.module.css';
 export function App() {
   const [currentTVShow, setCurrentTVShow] = useState();
   const [recommendationsList, setRecommendationsList] = useState([]);
+
+  // Manage background switching without flicker
+  const [bgUrl, setBgUrl] = useState('');
+  const [prevBgUrl, setPrevBgUrl] = useState('');
+  const [isFading, setIsFading] = useState(false);
+  const loadIdRef = useRef(0);
+
+  const nextBgUrl = useMemo(() => {
+    if (!currentTVShow || !currentTVShow.backdrop_path) return '';
+    return `${BACKDROP_BASE_URL}${currentTVShow.backdrop_path}`;
+  }, [currentTVShow]);
 
   const fetchPopulars = useCallback(async () => {
     try {
@@ -55,16 +66,57 @@ export function App() {
     }
   }, [currentTVShow, fetchRecommendations]);
 
+  // Preload and crossfade background image when currentTVShow changes
+  useEffect(() => {
+    if (!nextBgUrl) return;
+
+    const img = new Image();
+    const thisLoadId = ++loadIdRef.current;
+
+    img.onload = () => {
+      // Ignore if a newer load started
+      if (thisLoadId !== loadIdRef.current) return;
+      setPrevBgUrl(bgUrl || nextBgUrl); // keep previous visible during fade; fallback to next initially
+      setBgUrl(nextBgUrl);
+      setIsFading(true);
+      // End fade after transition duration; keep simple JS timer to sync with CSS duration (400ms)
+      setTimeout(() => {
+        if (loadIdRef.current === thisLoadId) {
+          setPrevBgUrl('');
+          setIsFading(false);
+        }
+      }, 450);
+    };
+
+    img.onerror = () => {
+      // On error, do not change background to avoid gray flash
+    };
+
+    img.src = nextBgUrl;
+  }, [nextBgUrl]);
+
+  const gradient = 'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55))';
+
   return (
-    <div
-      className={s.main_container}
-      style={{
-        background: currentTVShow
-          ? `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-             url("${BACKDROP_BASE_URL}${currentTVShow.backdrop_path}") no-repeat center / cover`
-          : 'black',
-      }}
-    >
+    <div className={s.main_container}>
+      {/* Background layers to avoid flicker */}
+      <div
+        className={s.bg_layer}
+        style={{
+          opacity: 1,
+          background: bgUrl ? `${gradient}, url("${bgUrl}") no-repeat center / cover` : 'black',
+        }}
+      />
+      {prevBgUrl && (
+        <div
+          className={`${s.bg_layer} ${s.bg_layer_prev}`}
+          style={{
+            opacity: isFading ? 0 : 1,
+            background: `${gradient}, url("${prevBgUrl}") no-repeat center / cover`,
+          }}
+        />
+      )}
+
       <div className={s.header}>
         <div className="row">
           <div className="col-4">

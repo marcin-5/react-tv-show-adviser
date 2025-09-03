@@ -1,9 +1,30 @@
 .main_container {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100vh;
   padding: 25px;
   background-color: black;
+  overflow: hidden;
+}
+
+/* background layers for smooth switching */
+.bg_layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: opacity 400ms ease;
+}
+.bg_layer_prev {
+  /* will fade out to reveal the new bg layer beneath */
+}
+
+/* content above background */
+.header,
+.tv_show_details,
+.recommended_shows {
+  position: relative;
+  z-index: 1;
 }
 
 .header {
