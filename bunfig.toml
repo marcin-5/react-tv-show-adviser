@@ -1,0 +1,15 @@
+# Bun configuration for this project
+# See: https://bun.sh/docs/runtime/bunfig
+
+[install]
+# Ensure production installs respect package.json engines if set
+saveTextLockfile = true
+
+typings = true
+
+[run]
+# Default environment variables for scripts run via `bun run`
+# env = { }
+
+[define]
+# You can define replacements (esbuild-style). Keeping empty for now.

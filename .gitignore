@@ -6,6 +6,9 @@
 /.pnp
 .pnp.js
 
+# Bun
+bun.lockb
+
 # testing
 /coverage
 
@@ -22,3 +25,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.idea
